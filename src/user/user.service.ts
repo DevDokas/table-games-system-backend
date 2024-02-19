@@ -22,6 +22,10 @@ export class UserService {
     private readonly passwordService: PasswordService
   ) {}
 
+  async getById(id: string) {
+    return this.userModel.findById(id);
+  }
+
   async create(user: UserInterface) {
     console.log(user);
 

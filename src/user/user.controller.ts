@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserInterface } from './interfaces/user.interface';
 import { LoginInterface } from './interfaces/login.interface';
@@ -7,13 +7,27 @@ import { LoginInterface } from './interfaces/login.interface';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post('/create')
+  @Get(':id')
+  getById(@Param('id') id: string) {
+    return this.userService.getById(id);
+  }
+
+  @Post('/register')
   create(@Body() user: UserInterface): void {
     this.userService.create(user);
   }
 
   @Post('/login')
-  login(@Body() login: LoginInterface) {
-    return this.userService.login(login);
+  async login(@Body() login: LoginInterface) {
+    try {
+      const token = await this.userService.login(login);
+      return {
+        status: HttpStatus.ACCEPTED,
+        token: token.toString(),
+      };
+    } catch (error) {
+      console.error('Erro ao fazer login:', error);
+      return { erro: 'Erro ao fazer login' };
+    }
   }
 }

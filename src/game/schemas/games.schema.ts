@@ -11,6 +11,9 @@ export class Game extends Document {
   name: string;
 
   @Prop()
+  slug: string;
+
+  @Prop()
   backgroundColor: string;
 
   @Prop()
